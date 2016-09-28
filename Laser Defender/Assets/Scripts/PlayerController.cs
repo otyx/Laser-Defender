@@ -5,11 +5,11 @@ public class PlayerController : MonoBehaviour {
 
 	// speed modifier
 	public float shipSpeedFactor = 15.0f;
-	public float padding;
 
 	// constraints of movement
-	float xmin = -5;
-	float xmax = 5;
+	private float xmin = -5;
+	private float xmax = 5;
+	private float padding;
 
 	void Start() {
 		padding = GetComponent<SpriteRenderer> ().bounds.extents.x;
