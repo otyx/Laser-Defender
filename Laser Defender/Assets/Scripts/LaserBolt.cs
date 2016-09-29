@@ -3,13 +3,13 @@ using System.Collections;
 
 public class LaserBolt : MonoBehaviour {
 
-	// Use this for initialization
-	void Start () {
-	
+	public float damage = 100f;
+
+	public float GetDamage() {
+		return damage;
 	}
-	
-	// Update is called once per frame
-	void Update () {
-	
+
+	public void Hit() {
+		Destroy (gameObject);
 	}
 }

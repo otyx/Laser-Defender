@@ -52,7 +52,8 @@ public class PlayerController : MonoBehaviour {
 
 	void Fire() {
 		bolt = Instantiate(boltprefab, transform.position - boltOffset, Quaternion.identity) as GameObject;
-		bolt.name = "LaserBolt";
+		bolt.name = Tags.PLAYER_BOLT;
+		bolt.tag = Tags.PLAYER_BOLT;
 		bolt.GetComponent<Rigidbody2D> ().velocity = new Vector3 (0, boltSpeed, 0);
 	}
 }
