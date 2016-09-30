@@ -56,4 +56,25 @@ public class PlayerController : MonoBehaviour {
 		bolt.tag = Tags.PLAYER_BOLT;
 		bolt.GetComponent<Rigidbody2D> ().velocity = new Vector3 (0, boltSpeed, 0);
 	}
+
+	void OnTriggerEnter2D (Collider2D col){
+		if (col.gameObject.tag.Equals (Tags.ENEMY_BOLT)) {
+			Debug.Log ("Hit by enemy bolt ! " + col.gameObject.GetComponent<Collider2D>().GetInstanceID() );
+
+			// activate hit on bolt
+			EnemyBolt bolt = col.gameObject.GetComponent<EnemyBolt>();
+
+			// take the hit
+			// to do remove health
+			//health -= bolt.GetDamage();
+
+			//if (health <= 0) {
+			//	Die ();
+			//}
+
+			// eliminate the bolt
+			bolt.Hit();
+
+		}
+	}
 }
