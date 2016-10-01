@@ -1,22 +1,24 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class EnemySpawner : MonoBehaviour {
+public class EnemyFormation : MonoBehaviour {
 
 	// the enemy prefab
 	public GameObject enemyPrefab;
+
+	// the enemyController
+	public EnemyController enemyController;
 
 	// the enemy speed factor
 	public float enemySpeedFactor = 1f;
 
 	// the formation
-	public float width = 10f;
-	public float height = 5f;
-
+	public float width; 
+	public float height; 
 
 	// constraints of movement
-	public float xmin = -5;
-	public float xmax = 5;
+	public float xmin;
+	public float xmax;
 
 	// changes direction if flipped
 	private int directionModifier = 1;
@@ -24,12 +26,6 @@ public class EnemySpawner : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		foreach(Transform child in transform) {
-			GameObject enemy = Instantiate (enemyPrefab, child.transform.position, Quaternion.identity) as GameObject;
-			enemy.transform.parent = child;
-			enemy.gameObject.name = "Enemy";
-		}
-
 		float distance = transform.position.z - Camera.main.transform.position.z;
 		Vector3 leftBoundary = Camera.main.ViewportToWorldPoint (new Vector3 (0, 0, distance));
 		Vector3 rightBoundary = Camera.main.ViewportToWorldPoint (new Vector3 (1, 0, distance));
@@ -52,6 +48,48 @@ public class EnemySpawner : MonoBehaviour {
 			float newX = Mathf.Clamp (transform.position.x, xmin, xmax);
 			transform.position = new Vector3 (newX, transform.position.y, transform.position.z);
 		}
+	}
 
+	public void SpawnWave() {
+		SpawnUntilFull ();
+		/**
+		foreach(Transform child in transform) {
+			GameObject enemy = Instantiate (enemyPrefab, child.transform.position, Quaternion.identity) as GameObject;
+			enemy.transform.parent = child;
+			enemy.gameObject.name = Tags.ENEMY;
+		}
+**/
+
+	}
+
+	public void SpawnUntilFull() {
+		Transform freePosition = NextFreePosition ();
+		if (freePosition) {
+			GameObject enemy = Instantiate (enemyPrefab, freePosition.transform.position, Quaternion.identity) as GameObject;
+			enemy.transform.parent = freePosition;
+			enemy.gameObject.name = Tags.ENEMY;
+			if (NextFreePosition ()) {
+				Invoke ("SpawnUntilFull", 0.5f);
+			}
+		}
+
+	}
+
+	Transform NextFreePosition() {
+		foreach (Transform child in transform) {
+			if (child.childCount == 0) {
+				return child;
+			} 
+		}
+		return null;
+	}
+
+	public bool AllEnemiesDead() {
+		foreach (Transform child in transform) {
+			if (child.childCount > 0) {
+				return false;
+			} 
+		}
+		return true;
 	}
 }

@@ -27,18 +27,12 @@ public class Enemy : MonoBehaviour {
 	void Update() {
 		// fire one bolt at a time.
 		if ((Time.deltaTime * fireFrequencyModifier) > Random.value) {
-			Debug.Log ("Firing!");
 			Fire ();
-		} else {
-			Debug.Log ("Not Firing and bolt is " + bolt);
-		}
-
+		} 
 	}
 
 	void OnTriggerEnter2D (Collider2D col){
 		if (col.gameObject.tag.Equals (Tags.PLAYER_BOLT)) {
-			Debug.Log ("Hit by player bolt ! " + col.gameObject.GetComponent<Collider2D>().GetInstanceID() );
-
 			// activate hit on bolt
 			LaserBolt bolt = col.gameObject.GetComponent<LaserBolt>();
 
@@ -60,8 +54,8 @@ public class Enemy : MonoBehaviour {
 	}
 
 	void Die() {
-		Destroy(Instantiate (explosion, transform.position, Quaternion.identity), 0.5f);
-		AudioSource.PlayClipAtPoint (explosionclip, transform.position);
+		Debug.Log ("Being made to die!!!");
+		Destroy(Instantiate (explosion, transform.position, Quaternion.identity), 1.0f);
 		Destroy (gameObject);
 	}
 }

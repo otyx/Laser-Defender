@@ -6,8 +6,16 @@ public class PlayerController : MonoBehaviour {
 	// speed modifier
 	public float shipSpeedFactor = 15.0f;
 
+	// player health level
+	public float playerHealth;
+
 	// laser bolt
 	public GameObject boltprefab;
+
+	// the explosion effect
+	public GameObject explosion;
+
+	// the sound effect
 	public float boltSpeed;
 	public float fireDelay;
 
@@ -59,22 +67,27 @@ public class PlayerController : MonoBehaviour {
 
 	void OnTriggerEnter2D (Collider2D col){
 		if (col.gameObject.tag.Equals (Tags.ENEMY_BOLT)) {
-			Debug.Log ("Hit by enemy bolt ! " + col.gameObject.GetComponent<Collider2D>().GetInstanceID() );
-
+			
 			// activate hit on bolt
 			EnemyBolt bolt = col.gameObject.GetComponent<EnemyBolt>();
 
 			// take the hit
 			// to do remove health
-			//health -= bolt.GetDamage();
+			playerHealth -= bolt.GetDamage();
+			Debug.Log ("Hit by enemy bolt ! " + col.gameObject.GetComponent<Collider2D>().GetInstanceID() );
 
-			//if (health <= 0) {
-			//	Die ();
-			//}
+			if (playerHealth <= 0) {
+				Die ();
+			}
 
 			// eliminate the bolt
 			bolt.Hit();
 
 		}
+	}
+
+	void Die() {
+		Destroy(Instantiate (explosion, transform.position, Quaternion.identity), 1.0f);
+		Destroy (gameObject);
 	}
 }
