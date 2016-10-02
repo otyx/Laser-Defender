@@ -48,7 +48,9 @@ public class PlayerController : MonoBehaviour {
 		} else if (Input.GetKey (KeyCode.RightArrow)) {
 			// Right arrow pressed
 			transform.position += Vector3.right * shipSpeedFactor * Time.deltaTime;
-		} else if (Input.GetKeyDown (KeyCode.Space)) {
+		} 
+
+		if (Input.GetKeyDown (KeyCode.Space)) {
 			// firing the laser
 			InvokeRepeating ("Fire", 0f, fireDelay); 
 		} else if (Input.GetKeyUp (KeyCode.Space)) {

@@ -10,4 +10,8 @@ public static class Tags  {
 	public static string ENEMY_BOLT		= "EnemyBolt";
 
 	public static string ENEMY_FORMATION	= "EnemyFormation";
+
+
+	// animations
+	public static string ENEMY_SPIN_ANIM		= "EnemySpin";
 }

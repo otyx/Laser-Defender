@@ -29,7 +29,7 @@ public class EnemyFormation : MonoBehaviour {
 		float distance = transform.position.z - Camera.main.transform.position.z;
 		Vector3 leftBoundary = Camera.main.ViewportToWorldPoint (new Vector3 (0, 0, distance));
 		Vector3 rightBoundary = Camera.main.ViewportToWorldPoint (new Vector3 (1, 0, distance));
-		padding = width * 0.5f;
+		padding = width * 0.2f;
 		xmin = leftBoundary.x + padding;
 		xmax = rightBoundary.x - padding;
 	}

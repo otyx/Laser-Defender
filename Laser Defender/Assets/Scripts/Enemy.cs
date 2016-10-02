@@ -21,13 +21,20 @@ public class Enemy : MonoBehaviour {
 
 	// the enemy's blt
 	private GameObject bolt;
+	private Animator anim;
 
-	void Start() {}
+	void Start() {
+		anim = gameObject.GetComponent<Animator> ();
+
+	}
 
 	void Update() {
 		// fire one bolt at a time.
 		if ((Time.deltaTime * fireFrequencyModifier) > Random.value) {
 			Fire ();
+			if (Random.value < 0.1) {
+				anim.Play (Tags.ENEMY_SPIN_ANIM);
+			}
 		} 
 	}
 
