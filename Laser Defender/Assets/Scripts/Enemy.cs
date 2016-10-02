@@ -54,8 +54,9 @@ public class Enemy : MonoBehaviour {
 	}
 
 	void Die() {
-		Debug.Log ("Being made to die!!!");
 		Destroy(Instantiate (explosion, transform.position, Quaternion.identity), 1.0f);
 		Destroy (gameObject);
+		GameObject plyr = GameObject.FindGameObjectWithTag (Tags.PLAYER) ;
+		plyr.gameObject.GetComponent<PlayerController> ().score += 20;
 	}
 }

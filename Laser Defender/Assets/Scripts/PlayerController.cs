@@ -1,7 +1,12 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.UI;
+using System;
 
 public class PlayerController : MonoBehaviour {
+	// TODO remove Quick and dirty score hack
+	public float score = 0;
+	public Text scoretext;
 
 	// speed modifier
 	public float shipSpeedFactor = 15.0f;
@@ -39,11 +44,9 @@ public class PlayerController : MonoBehaviour {
 	void Update () {
 		if (Input.GetKey (KeyCode.LeftArrow)) {
 			// left arrow pressed
-			Debug.Log ("Pressed Left");
 			transform.position += Vector3.left * shipSpeedFactor * Time.deltaTime;
 		} else if (Input.GetKey (KeyCode.RightArrow)) {
 			// Right arrow pressed
-			Debug.Log ("Pressed Right");
 			transform.position += Vector3.right * shipSpeedFactor * Time.deltaTime;
 		} else if (Input.GetKeyDown (KeyCode.Space)) {
 			// firing the laser
@@ -53,6 +56,7 @@ public class PlayerController : MonoBehaviour {
 			CancelInvoke ("Fire"); 
 		}
 
+		scoretext.text = score.ToString();
 		// restrict x movement
 		float newX = Mathf.Clamp (transform.position.x, xmin, xmax);
 		transform.position = new Vector3 (newX, transform.position.y, transform.position.z);
@@ -63,6 +67,11 @@ public class PlayerController : MonoBehaviour {
 		bolt.name = Tags.PLAYER_BOLT;
 		bolt.tag = Tags.PLAYER_BOLT;
 		bolt.GetComponent<Rigidbody2D> ().velocity = new Vector3 (0, boltSpeed, 0);
+
+		// DIRTY HACK
+		score -= 1;
+		score = (score < 0)? 0 : score;
+
 	}
 
 	void OnTriggerEnter2D (Collider2D col){
@@ -74,7 +83,6 @@ public class PlayerController : MonoBehaviour {
 			// take the hit
 			// to do remove health
 			playerHealth -= bolt.GetDamage();
-			Debug.Log ("Hit by enemy bolt ! " + col.gameObject.GetComponent<Collider2D>().GetInstanceID() );
 
 			if (playerHealth <= 0) {
 				Die ();
