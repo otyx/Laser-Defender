@@ -10,7 +10,7 @@ public class EnemyController : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		SpawnFormation ();
+		Invoke("SpawnFormation", 3f);
 	}
 		
 	// Update is called once per frame
