@@ -4,10 +4,6 @@ using UnityEngine.UI;
 using System;
 
 public class PlayerController : MonoBehaviour {
-	// TODO remove Quick and dirty score hack
-	public float score = 0;
-	public Text scoretext;
-
 	// speed modifier
 	public float shipSpeedFactor = 15.0f;
 
@@ -16,6 +12,7 @@ public class PlayerController : MonoBehaviour {
 
 	// laser bolt
 	public GameObject boltprefab;
+	public AudioClip fireClip;
 
 	// the explosion effect
 	public GameObject explosion;
@@ -31,6 +28,12 @@ public class PlayerController : MonoBehaviour {
 	private Vector3 boltOffset = new Vector3 (0, -0.5f);
 	private GameObject bolt;
 
+	private LevelManager levelManager;
+
+
+	// the scorekeeper
+	private ScoreKeeper scoreKeeper;
+
 	void Start() {
 		padding = GetComponent<SpriteRenderer> ().bounds.extents.x;
 		float distance = transform.position.z - Camera.main.transform.position.z;
@@ -38,6 +41,10 @@ public class PlayerController : MonoBehaviour {
 		Vector3 rightmost = Camera.main.ViewportToWorldPoint (new Vector3 (1, 0, distance));
 		xmin = leftmost.x + padding;
 		xmax = rightmost.x - padding;
+		scoreKeeper = FindObjectOfType<ScoreKeeper> ();
+		scoreKeeper.Reset ();
+
+		levelManager = GameObject.FindObjectOfType<LevelManager> ();
 	}
 
 	// Update is called once per frame
@@ -58,22 +65,19 @@ public class PlayerController : MonoBehaviour {
 			CancelInvoke ("Fire"); 
 		}
 
-		scoretext.text = score.ToString();
 		// restrict x movement
 		float newX = Mathf.Clamp (transform.position.x, xmin, xmax);
 		transform.position = new Vector3 (newX, transform.position.y, transform.position.z);
 	}
 
 	void Fire() {
+		AudioSource.PlayClipAtPoint (fireClip, transform.position);
 		bolt = Instantiate(boltprefab, transform.position - boltOffset, Quaternion.identity) as GameObject;
 		bolt.name = Tags.PLAYER_BOLT;
 		bolt.tag = Tags.PLAYER_BOLT;
 		bolt.GetComponent<Rigidbody2D> ().velocity = new Vector3 (0, boltSpeed, 0);
 
-		// DIRTY HACK
-		score -= 1;
-		score = (score < 0)? 0 : score;
-
+		scoreKeeper.Score (Tags.PLAYER_BOLT_SCORE_COST);
 	}
 
 	void OnTriggerEnter2D (Collider2D col){
@@ -97,7 +101,8 @@ public class PlayerController : MonoBehaviour {
 	}
 
 	void Die() {
-		Destroy(Instantiate (explosion, transform.position, Quaternion.identity), 1.0f);
+		Destroy(Instantiate (explosion, transform.position, Quaternion.identity), 5f);
 		Destroy (gameObject);
+		levelManager.Invoke ("LoadLoseScreen", 3);
 	}
 }

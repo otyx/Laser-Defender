@@ -17,21 +17,28 @@ public class EnemyFormation : MonoBehaviour {
 	public float height; 
 
 	// constraints of movement
-	public float xmin;
-	public float xmax;
+	public float xmin, ymin;
+	public float xmax, ymax;
 
 	// changes direction if flipped
-	private int directionModifier = 1;
-	private float padding;
+	private int xDirectionModifier = 1;
+	private float yDirectionModifier = 1.3f;
+
+	private float xPadding;
+	private float yPadding;
 
 	// Use this for initialization
 	void Start () {
 		float distance = transform.position.z - Camera.main.transform.position.z;
 		Vector3 leftBoundary = Camera.main.ViewportToWorldPoint (new Vector3 (0, 0, distance));
 		Vector3 rightBoundary = Camera.main.ViewportToWorldPoint (new Vector3 (1, 0, distance));
-		padding = width * 0.2f;
-		xmin = leftBoundary.x + padding;
-		xmax = rightBoundary.x - padding;
+		Vector3 topBoundary = Camera.main.ViewportToWorldPoint (new Vector3 (0, 1, distance));
+		xPadding = width * 0.2f;
+		yPadding = height * 1.5f;
+		xmin = leftBoundary.x + xPadding;
+		xmax = rightBoundary.x - xPadding;
+		ymin = leftBoundary.y + yPadding;
+		ymax = topBoundary.y;// - yPadding;
 	}
 
 	public void OnDrawGizmos() {
@@ -40,26 +47,29 @@ public class EnemyFormation : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update () {
-		transform.position += Vector3.left * enemySpeedFactor * Time.deltaTime * directionModifier;
+		// adjust the x position
+		transform.position += Vector3.right * enemySpeedFactor * Time.deltaTime * xDirectionModifier;
+
+		// adjust the y position
+		transform.position += Vector3.down * enemySpeedFactor * Time.deltaTime * yDirectionModifier;
 
 		// restrict x movement
 		if (transform.position.x <= xmin || transform.position.x >= xmax) {
-			directionModifier *= -1; 
+			xDirectionModifier *= -1; 
 			float newX = Mathf.Clamp (transform.position.x, xmin, xmax);
 			transform.position = new Vector3 (newX, transform.position.y, transform.position.z);
+		}
+
+		// restrict y movement
+		if (transform.position.y <= ymin || transform.position.y >= ymax) {
+			yDirectionModifier *= -1; 
+			float newY = Mathf.Clamp (transform.position.y, ymin, ymax);
+			transform.position = new Vector3 (transform.position.x, newY, transform.position.z);
 		}
 	}
 
 	public void SpawnWave() {
 		SpawnUntilFull ();
-		/**
-		foreach(Transform child in transform) {
-			GameObject enemy = Instantiate (enemyPrefab, child.transform.position, Quaternion.identity) as GameObject;
-			enemy.transform.parent = child;
-			enemy.gameObject.name = Tags.ENEMY;
-		}
-**/
-
 	}
 
 	public void SpawnUntilFull() {

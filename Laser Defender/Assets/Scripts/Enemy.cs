@@ -6,6 +6,9 @@ public class Enemy : MonoBehaviour {
 	// enemy health level
 	public float health = 100f;
 
+	// enemy value
+	public int enemyValue = 20;
+
 	// the enemy bolt
 	public GameObject enemyBolt;
 
@@ -15,17 +18,19 @@ public class Enemy : MonoBehaviour {
 
 	// enemy bolt speed
 	public float enemyBoltSpeed = -5f;
+	public AudioClip fireClip;
 
 	// fire frequency modifier
 	public float fireFrequencyModifier = 2f;
 
-	// the enemy's blt
+	// the enemy's bolt
 	private GameObject bolt;
 	private Animator anim;
+	private ScoreKeeper scoreKeeper;
 
 	void Start() {
 		anim = gameObject.GetComponent<Animator> ();
-
+		scoreKeeper = GameObject.FindObjectOfType<ScoreKeeper> ();
 	}
 
 	void Update() {
@@ -58,12 +63,12 @@ public class Enemy : MonoBehaviour {
 		bolt = Instantiate (enemyBolt, transform.position - new Vector3(0f, 0.5f, 0f), Quaternion.AngleAxis(180, Vector3.forward)) as GameObject;
 		bolt.gameObject.name = Tags.ENEMY_BOLT;
 		bolt.GetComponent<Rigidbody2D> ().velocity = new Vector3 (0, enemyBoltSpeed, 0);
+		AudioSource.PlayClipAtPoint (fireClip, transform.position);
 	}
 
 	void Die() {
 		Destroy(Instantiate (explosion, transform.position, Quaternion.identity), 1.0f);
 		Destroy (gameObject);
-		GameObject plyr = GameObject.FindGameObjectWithTag (Tags.PLAYER) ;
-		plyr.gameObject.GetComponent<PlayerController> ().score += 20;
+		scoreKeeper.Score(enemyValue);
 	}
 }

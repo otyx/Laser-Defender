@@ -16,7 +16,6 @@ public class EnemyController : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		if (activeFormation.GetComponent<EnemyFormation> ().AllEnemiesDead ()) {
-			Debug.Log ("All enemies dead!");
 			Destroy (activeFormation);
 			SpawnFormation ();
 		}
@@ -24,8 +23,8 @@ public class EnemyController : MonoBehaviour {
 
 	private void SpawnFormation() {
 		currentFormationPrefab = EnemyFormations[Random.Range(0, EnemyFormations.Length)];
-		activeFormation = Instantiate (currentFormationPrefab, new Vector3(0,0,-1), Quaternion.identity) as GameObject;
-		activeFormation.transform.parent = transform;
+		activeFormation = Instantiate (currentFormationPrefab, new Vector3(0,3,-1), Quaternion.identity, transform) as GameObject;
+		//activeFormation.transform.parent = transform;
 		activeFormation.name = Tags.ENEMY_FORMATION;
 		activeFormation.GetComponent<EnemyFormation> ().SpawnWave ();
 	}

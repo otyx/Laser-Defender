@@ -9,6 +9,10 @@ public class LevelManager : MonoBehaviour {
 		SceneManager.LoadScene (name);
 	}
 
+	public void LoadLoseScreen() {
+		LoadLevel (Tags.LOSE_SCREEN);
+	}
+
 	public void QuitRequest(){
 		Debug.Log ("Quit requested");
 		Application.Quit ();
