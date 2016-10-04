@@ -49,18 +49,18 @@ public class PlayerController : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update () {
-		if (Input.GetKey (KeyCode.LeftArrow)) {
+		if (Input.GetKey (KeyCode.LeftArrow)|| Input.GetKey(KeyCode.A)) {
 			// left arrow pressed
 			transform.position += Vector3.left * shipSpeedFactor * Time.deltaTime;
-		} else if (Input.GetKey (KeyCode.RightArrow)) {
+		} else if (Input.GetKey (KeyCode.RightArrow) || Input.GetKey(KeyCode.D)) {
 			// Right arrow pressed
 			transform.position += Vector3.right * shipSpeedFactor * Time.deltaTime;
 		} 
 
-		if (Input.GetKeyDown (KeyCode.Space)) {
+		if (Input.GetKeyDown (KeyCode.Space) || Input.GetKeyDown(KeyCode.RightControl)) {
 			// firing the laser
 			InvokeRepeating ("Fire", 0f, fireDelay); 
-		} else if (Input.GetKeyUp (KeyCode.Space)) {
+		} else if (Input.GetKeyUp (KeyCode.Space) || Input.GetKeyUp (KeyCode.RightControl)) {
 			// stop firing the laser
 			CancelInvoke ("Fire"); 
 		}
