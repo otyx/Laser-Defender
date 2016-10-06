@@ -42,7 +42,8 @@ public class PlayerController : MonoBehaviour {
 		xmin = leftmost.x + padding;
 		xmax = rightmost.x - padding;
 		scoreKeeper = FindObjectOfType<ScoreKeeper> ();
-		scoreKeeper.Reset ();
+		ScoreKeeper.Reset ();
+		scoreKeeper.UpdateScoreText ();
 
 		levelManager = GameObject.FindObjectOfType<LevelManager> ();
 	}
@@ -101,8 +102,8 @@ public class PlayerController : MonoBehaviour {
 	}
 
 	void Die() {
+		levelManager.Invoke ("LoadLoseScreen", 3);
 		Destroy(Instantiate (explosion, transform.position, Quaternion.identity), 5f);
 		Destroy (gameObject);
-		levelManager.Invoke ("LoadLoseScreen", 3);
 	}
 }

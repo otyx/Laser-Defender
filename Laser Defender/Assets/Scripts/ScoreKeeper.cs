@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 public class ScoreKeeper : MonoBehaviour {
 
-	private float score = 0;
+	private static float score = 0;
 
 	public Text scoreText;
 
@@ -15,12 +15,15 @@ public class ScoreKeeper : MonoBehaviour {
 		UpdateScoreText ();
 	}
 
-	public void Reset() {
-		score = 0;
-		UpdateScoreText ();
+	public static float GetScore() {
+		return score;	
 	}
 
-	private void UpdateScoreText() {
+	public static void Reset() {
+		score = 0;
+	}
+
+	public void UpdateScoreText() {
 		scoreText.text = score.ToString ();
 	}
 }

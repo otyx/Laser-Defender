@@ -20,8 +20,7 @@ public static class Tags  {
 
 	// scenes
 	public static string START_SCREEN	= "Start Menu";
-	public static string LOSE_SCREEN	= "Lose Screen";
-	public static string WIN_SCREEN		= "Win Screen";
+	public static string END_SCREEN		= "End Screen";
 
 
 }

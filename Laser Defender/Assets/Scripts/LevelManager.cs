@@ -10,7 +10,7 @@ public class LevelManager : MonoBehaviour {
 	}
 
 	public void LoadLoseScreen() {
-		LoadLevel (Tags.LOSE_SCREEN);
+		LoadLevel (Tags.END_SCREEN);
 	}
 
 	public void QuitRequest(){
