@@ -8,6 +8,7 @@ public static class Tags  {
 	public static string ENEMY			= "Enemy";
 
 	public static string ENEMY_BOLT		= "EnemyBolt";
+	public static string ENEMY_BOMB		= "EnemyBomb";
 
 	public static string ENEMY_FORMATION	= "EnemyFormation";
 
@@ -22,5 +23,7 @@ public static class Tags  {
 	public static string START_SCREEN	= "Start Menu";
 	public static string END_SCREEN		= "End Screen";
 
+	// layers
+	public static int ENEMY_FIRE_LAYER = 11;
 
 }

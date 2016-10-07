@@ -4,7 +4,7 @@ using System.Collections;
 public class EnemyFormation : MonoBehaviour {
 
 	// the enemy prefab
-	public GameObject enemyPrefab;
+	public GameObject[] enemyPrefabs;
 
 	// the enemyController
 	public EnemyController enemyController;
@@ -75,7 +75,8 @@ public class EnemyFormation : MonoBehaviour {
 	public void SpawnUntilFull() {
 		Transform freePosition = NextFreePosition ();
 		if (freePosition) {
-			GameObject enemy = Instantiate (enemyPrefab, freePosition.transform.position, Quaternion.identity) as GameObject;
+			GameObject prefab = enemyPrefabs [Random.Range (0, enemyPrefabs.Length)];
+			GameObject enemy = Instantiate (prefab , freePosition.transform.position, Quaternion.identity) as GameObject;
 			enemy.transform.parent = freePosition;
 			enemy.gameObject.name = Tags.ENEMY;
 			if (NextFreePosition ()) {

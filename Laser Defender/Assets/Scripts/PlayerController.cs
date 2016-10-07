@@ -82,15 +82,16 @@ public class PlayerController : MonoBehaviour {
 	}
 
 	void OnTriggerEnter2D (Collider2D col){
-		if (col.gameObject.tag.Equals (Tags.ENEMY_BOLT)) {
-			
+		Debug.Log (col.gameObject.layer);
+		if (col.gameObject.layer == Tags.ENEMY_FIRE_LAYER) {
+			// we have been hit by enemy fire
+
 			// activate hit on bolt
-			EnemyBolt bolt = col.gameObject.GetComponent<EnemyBolt>();
+			EnemyBolt bolt = col.gameObject.GetComponent<EnemyBolt> ();
 
 			// take the hit
 			// to do remove health
-			playerHealth -= bolt.GetDamage();
-
+			playerHealth -= bolt.GetDamage ();
 			if (playerHealth <= 0) {
 				Die ();
 			}
