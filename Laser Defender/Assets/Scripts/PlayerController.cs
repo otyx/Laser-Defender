@@ -7,6 +7,10 @@ public class PlayerController : MonoBehaviour {
 	// speed modifier
 	public float shipSpeedFactor = 15.0f;
 
+	// acceleraometer sensitivity
+	public float SENSITIVITY;
+	public float ACCEL_SHIPSPEEDFACTOR;
+
 	// player health level
 	public float playerHealth;
 
@@ -30,6 +34,7 @@ public class PlayerController : MonoBehaviour {
 
 	private LevelManager levelManager;
 
+	private Vector3 direction;
 
 	// the scorekeeper
 	private ScoreKeeper scoreKeeper;
@@ -50,13 +55,26 @@ public class PlayerController : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update () {
-		if (Input.GetKey (KeyCode.LeftArrow)|| Input.GetKey(KeyCode.A)) {
+		// read accelerometer input
+		direction = Input.acceleration;
+
+		if (Input.GetKey (KeyCode.LeftArrow) || Input.GetKey (KeyCode.A)) {
 			// left arrow pressed
 			transform.position += Vector3.left * shipSpeedFactor * Time.deltaTime;
-		} else if (Input.GetKey (KeyCode.RightArrow) || Input.GetKey(KeyCode.D)) {
+		} else if (Input.GetKey (KeyCode.RightArrow) || Input.GetKey (KeyCode.D)) {
 			// Right arrow pressed
 			transform.position += Vector3.right * shipSpeedFactor * Time.deltaTime;
+		} else if (direction.x > SENSITIVITY || direction.x < SENSITIVITY * -1) {
+			direction *= Time.deltaTime;
+			direction *= shipSpeedFactor;
+			transform.Translate (new Vector3(direction.x, 0 , 0));
 		} 
+		for (int i = 0; i < Input.touchCount; ++i) {
+			if (Input.GetTouch (i).phase == TouchPhase.Began) {
+				// firing the laser
+				Fire ();
+			}
+		}
 
 		if (Input.GetKeyDown (KeyCode.Space) || Input.GetKeyDown(KeyCode.RightControl)) {
 			// firing the laser
