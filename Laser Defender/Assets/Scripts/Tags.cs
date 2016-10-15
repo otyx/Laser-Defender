@@ -1,29 +1,35 @@
 ﻿
 public static class Tags  {
 
-	public static string PLAYER_BOLT 	= "PlayerBolt";
+	public const string PLAYER_BOLT 	= "PlayerBolt";
 
-	public static string PLAYER			= "Player";
+	public const string PLAYER			= "Player";
 
-	public static string ENEMY			= "Enemy";
+	public const string ENEMY			= "Enemy";
 
-	public static string ENEMY_BOLT		= "EnemyBolt";
-	public static string ENEMY_BOMB		= "EnemyBomb";
+	public const string ENEMY_BOLT		= "EnemyBolt";
+	public const string ENEMY_BOMB		= "EnemyBomb";
 
-	public static string ENEMY_FORMATION	= "EnemyFormation";
+	public const string ENEMY_FORMATION	= "EnemyFormation";
+
+	public const string SHIELD_SYSTEM 		= "ShieldSystem";
+	public const string SHIELD_PARTICLES 	= "ShieldParticlesHit";
+	public const string PLAYER_EXPLOSION	= "PlayerExplosion";
 
 	// other constants
-	public static int PLAYER_BOLT_SCORE_COST = -1;
+	public const int PLAYER_BOLT_SCORE_COST = -1;
 
 	// animations
-	public static string ENEMY_SPIN_ANIM		= "EnemySpin";
+	public const string ENEMY_SPIN_ANIM		= "EnemySpin";
 
 
 	// scenes
-	public static string START_SCREEN	= "Start Menu";
-	public static string END_SCREEN		= "End Screen";
+	public const string START_SCREEN	= "Start Menu";
+	public const string END_SCREEN		= "End Screen";
 
 	// layers
-	public static int ENEMY_FIRE_LAYER = 11;
+	public const int PLAYER_FIRE_LAYER 		= 9;
+	public const int ENEMY_FIRE_LAYER 		= 11;
+	public const int ENEMY_TORPEDO_LAYER 	= 12;
 
 }

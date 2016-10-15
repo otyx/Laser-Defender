@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.SceneManagement;
 
 public class MusicPlayer : MonoBehaviour {
 	static MusicPlayer instance = null;
@@ -20,9 +21,14 @@ public class MusicPlayer : MonoBehaviour {
 			music = GetComponent<AudioSource> ();
 			playClip(startClip);
 		}
+
+		// registerthe delegate with the scenemanager
+		SceneManager.sceneLoaded += OnSceneLoad;
 	}
 
-	void OnLevelWasLoaded(int level) {
+	// the delegate function named as a delegate in the scenemanager
+	void OnSceneLoad(Scene scene, LoadSceneMode mode) {
+		int level = scene.buildIndex;
 		Debug.Log ("MUSICPLAYER: LevelLoaded is " + level);
 		if (music) {
 			music.Stop ();

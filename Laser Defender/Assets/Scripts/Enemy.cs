@@ -12,6 +12,9 @@ public class Enemy : MonoBehaviour {
 	// the enemy bolt
 	public GameObject enemyBolt;
 
+	// enemy hit effect
+	public ParticleSystem hitParticles;
+
 	// the enemy explosion
 	public GameObject explosion;
 	public AudioClip explosionclip;
@@ -53,6 +56,8 @@ public class Enemy : MonoBehaviour {
 
 			if (health <= 0) {
 				Die ();
+			} else {
+				ParticlesManager.CreateParticleEffect (hitParticles, col.transform.position, transform);
 			}
 			bolt.Hit();
 

@@ -4,6 +4,9 @@ using UnityEngine.UI;
 using System;
 
 public class PlayerController : MonoBehaviour {
+	// debug mode
+	public bool INDESTRUCTABLE;
+
 	// speed modifier
 	public float shipSpeedFactor = 15.0f;
 
@@ -11,19 +14,30 @@ public class PlayerController : MonoBehaviour {
 	public float SENSITIVITY;
 	public float ACCEL_SHIPSPEEDFACTOR;
 
+	public float StartHealthLevel;
+
 	// player health level
-	public float playerHealth;
+	private float playerHealth;
 
 	// laser bolt
 	public GameObject boltprefab;
 	public AudioClip fireClip;
 
 	// the explosion effect
-	public GameObject explosion;
+	public ParticleSystem explosion;
 
-	// the sound effect
+	// the player hit effect
+	public ParticleSystem PlayerHitParticles;
+
+	// the sound effects
+	public AudioClip playerHitClip;
+	public AudioClip playerDestroyed;
+
 	public float boltSpeed;
 	public float fireDelay;
+
+	// the shield system
+	public ShieldSystem shieldSystem;
 
 	// constraints of movement
 	private float xmin = -5;
@@ -33,6 +47,7 @@ public class PlayerController : MonoBehaviour {
 	private GameObject bolt;
 
 	private LevelManager levelManager;
+	private ParticlesManager particlesManager;
 
 	private Vector3 direction;
 
@@ -46,11 +61,16 @@ public class PlayerController : MonoBehaviour {
 		Vector3 rightmost = Camera.main.ViewportToWorldPoint (new Vector3 (1, 0, distance));
 		xmin = leftmost.x + padding;
 		xmax = rightmost.x - padding;
+
+		playerHealth = StartHealthLevel;
+
 		scoreKeeper = FindObjectOfType<ScoreKeeper> ();
 		ScoreKeeper.Reset ();
 		scoreKeeper.UpdateScoreText ();
 
 		levelManager = GameObject.FindObjectOfType<LevelManager> ();
+
+		shieldSystem = GetComponentInChildren<ShieldSystem>();
 	}
 
 	// Update is called once per frame
@@ -76,10 +96,10 @@ public class PlayerController : MonoBehaviour {
 			}
 		}
 
-		if (Input.GetKeyDown (KeyCode.Space) || Input.GetKeyDown(KeyCode.RightControl)) {
+		if (Input.GetKeyDown (KeyCode.Space) || Input.GetKeyDown(KeyCode.RightControl) || Input.GetKeyDown(KeyCode.LeftControl)) {
 			// firing the laser
 			InvokeRepeating ("Fire", 0f, fireDelay); 
-		} else if (Input.GetKeyUp (KeyCode.Space) || Input.GetKeyUp (KeyCode.RightControl)) {
+		} else if (Input.GetKeyUp (KeyCode.Space) || Input.GetKeyUp (KeyCode.RightControl) || Input.GetKeyUp(KeyCode.LeftControl)) {
 			// stop firing the laser
 			CancelInvoke ("Fire"); 
 		}
@@ -100,18 +120,29 @@ public class PlayerController : MonoBehaviour {
 	}
 
 	void OnTriggerEnter2D (Collider2D col){
-		Debug.Log (col.gameObject.layer);
-		if (col.gameObject.layer == Tags.ENEMY_FIRE_LAYER) {
+		//Debug.Log (col.gameObject.layer);
+		if (col.gameObject.layer == Tags.ENEMY_FIRE_LAYER || col.gameObject.layer == Tags.ENEMY_TORPEDO_LAYER ) {
 			// we have been hit by enemy fire
+			AudioSource.PlayClipAtPoint(playerHitClip, transform.position);
 
 			// activate hit on bolt
 			EnemyBolt bolt = col.gameObject.GetComponent<EnemyBolt> ();
 
 			// take the hit
-			// to do remove health
-			playerHealth -= bolt.GetDamage ();
+			if (!INDESTRUCTABLE) {
+				playerHealth -= bolt.GetDamage ();
+			}
+
+			ParticlesManager.CreateParticleEffect (PlayerHitParticles, col.transform.position, transform);
+
 			if (playerHealth <= 0) {
 				Die ();
+			} else {
+				// change colour of the sprite
+				SpriteRenderer sr = GetComponent<SpriteRenderer>();
+				float healthTintLevel = playerHealth/StartHealthLevel;
+				sr.color = new Color(sr.color.r, healthTintLevel, healthTintLevel);
+				AudioSource.PlayClipAtPoint (playerHitClip, transform.position);
 			}
 
 			// eliminate the bolt
@@ -122,7 +153,8 @@ public class PlayerController : MonoBehaviour {
 
 	void Die() {
 		levelManager.Invoke ("LoadLoseScreen", 3);
-		Destroy(Instantiate (explosion, transform.position, Quaternion.identity), 5f);
+		ParticlesManager.CreateParticleEffect (explosion, transform.position, Quaternion.identity, Tags.PLAYER_EXPLOSION, 5);
+		AudioSource.PlayClipAtPoint (playerDestroyed, transform.position);
 		Destroy (gameObject);
 	}
 }
