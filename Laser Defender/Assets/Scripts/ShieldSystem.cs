@@ -19,6 +19,7 @@ public class ShieldSystem : MonoBehaviour {
 	public ParticleSystem shieldParticles;
 	public ParticleSystem shieldsUp;
 	public ParticleSystem shieldsDown;
+	public AudioClip shieldsHitClip;
 
 	private ParticlesManager particlesManager;
 
@@ -34,26 +35,35 @@ public class ShieldSystem : MonoBehaviour {
 	void Update () {
 	}
 
-	void OnTriggerEnter2D (Collider2D col){
-		if (col.gameObject.layer == Tags.ENEMY_FIRE_LAYER) {
-			// we have been hit by enemy fire
+	public bool ShieldsAreUp() {
+		return currentShieldStrength > 0;	
+	}
 
-			// activate hit on bolt
-			EnemyBolt bolt = col.gameObject.GetComponent<EnemyBolt> ();
+	void OnTriggerEnter2D (Collider2D col){
+		if (col.gameObject.layer == Tags.ENEMY_FIRE_LAYER || col.gameObject.layer == Tags.ENEMY_TORPEDO_LAYER || col.gameObject.layer == Tags.ENEMY_SHIPS_LAYER) {
+			// we have been hit
+			// we have been hit by enemy fire
+			AudioSource.PlayClipAtPoint (shieldsHitClip, transform.position);
+			float damage = 0;
+			if (col.gameObject.layer == Tags.ENEMY_SHIPS_LAYER) {
+				// collided with a ship
+				damage = col.gameObject.GetComponent<Enemy>().enemyValue;
+				//eliminate the enemy
+				col.gameObject.GetComponent<Enemy>().Die();
+			} else {
+				// activate hit on bolt
+				EnemyBolt bolt = col.gameObject.GetComponent<EnemyBolt> ();
+				damage = bolt.GetDamage ();
+				// eliminate the bolt
+				bolt.Hit ();
+			}
 
 			// take the hit
-			// to do remove health
-			TakeHit (bolt.GetDamage ());
+			TakeHit (damage);
 
 			// fire the particle effect and prime it for destruction
 			ParticlesManager.CreateParticleEffect(shieldParticles, col.transform.position, transform, Tags.SHIELD_PARTICLES, 3);
-
-			// eliminate the bolt
-			bolt.Hit ();
-
-		} else {
-			// TODO deal with enemy collisions
-		}
+		} 
 	}
 
 	public void TakeHit(float hit) {

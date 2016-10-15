@@ -64,14 +64,14 @@ public class Enemy : MonoBehaviour {
 		}
 	}
 
-	void Fire() {
+	private void Fire() {
 		bolt = Instantiate (enemyBolt, transform.position - new Vector3(0f, 0.5f, 0f), Quaternion.AngleAxis(180, Vector3.forward)) as GameObject;
 		bolt.gameObject.name = Tags.ENEMY_BOLT;
 		bolt.GetComponent<Rigidbody2D> ().velocity = new Vector3 (0, enemyBoltSpeed, 0);
 		AudioSource.PlayClipAtPoint (fireClip, transform.position);
 	}
 
-	void Die() {
+	public void Die() {
 		Destroy(Instantiate (explosion, transform.position, Quaternion.identity), 1.0f);
 		Destroy (gameObject);
 		scoreKeeper.Score(enemyValue);

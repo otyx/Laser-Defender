@@ -119,18 +119,26 @@ public class PlayerController : MonoBehaviour {
 		scoreKeeper.Score (Tags.PLAYER_BOLT_SCORE_COST);
 	}
 
-	void OnTriggerEnter2D (Collider2D col){
-		//Debug.Log (col.gameObject.layer);
-		if (col.gameObject.layer == Tags.ENEMY_FIRE_LAYER || col.gameObject.layer == Tags.ENEMY_TORPEDO_LAYER ) {
+	void OnTriggerEnter2D (Collider2D col) {
+		if (col.gameObject.layer == Tags.ENEMY_FIRE_LAYER || col.gameObject.layer == Tags.ENEMY_TORPEDO_LAYER || col.gameObject.layer == Tags.ENEMY_SHIPS_LAYER) {
 			// we have been hit by enemy fire
-			AudioSource.PlayClipAtPoint(playerHitClip, transform.position);
+			AudioSource.PlayClipAtPoint (playerHitClip, transform.position);
+			float damage = 0;
+			if (col.gameObject.layer == Tags.ENEMY_SHIPS_LAYER) {
+				// collided with a ship
+				damage = col.gameObject.GetComponent<Enemy>().enemyValue;
+				//eliminate the enemy
+				col.gameObject.GetComponent<Enemy>().Die();
+			} else {
+				// activate hit on bolt
+				EnemyBolt bolt = col.gameObject.GetComponent<EnemyBolt> ();
+				damage = bolt.GetDamage ();
+				// eliminate the bolt
+				bolt.Hit ();
+			}
 
-			// activate hit on bolt
-			EnemyBolt bolt = col.gameObject.GetComponent<EnemyBolt> ();
-
-			// take the hit
-			if (!INDESTRUCTABLE) {
-				playerHealth -= bolt.GetDamage ();
+			if (!INDESTRUCTABLE || !shieldSystem.ShieldsAreUp()) {
+				playerHealth -= damage;
 			}
 
 			ParticlesManager.CreateParticleEffect (PlayerHitParticles, col.transform.position, transform);
@@ -139,16 +147,17 @@ public class PlayerController : MonoBehaviour {
 				Die ();
 			} else {
 				// change colour of the sprite
-				SpriteRenderer sr = GetComponent<SpriteRenderer>();
-				float healthTintLevel = playerHealth/StartHealthLevel;
-				sr.color = new Color(sr.color.r, healthTintLevel, healthTintLevel);
+				SpriteRenderer sr = GetComponent<SpriteRenderer> ();
+				float healthTintLevel = playerHealth / StartHealthLevel;
+				sr.color = new Color (sr.color.r, healthTintLevel, healthTintLevel);
 				AudioSource.PlayClipAtPoint (playerHitClip, transform.position);
 			}
 
-			// eliminate the bolt
-			bolt.Hit();
-
 		}
+	}
+
+	void HandleHit() {
+	
 	}
 
 	void Die() {

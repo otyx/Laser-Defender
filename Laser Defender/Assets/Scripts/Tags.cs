@@ -29,6 +29,7 @@ public static class Tags  {
 
 	// layers
 	public const int PLAYER_FIRE_LAYER 		= 9;
+	public const int ENEMY_SHIPS_LAYER 		= 10;
 	public const int ENEMY_FIRE_LAYER 		= 11;
 	public const int ENEMY_TORPEDO_LAYER 	= 12;
 
