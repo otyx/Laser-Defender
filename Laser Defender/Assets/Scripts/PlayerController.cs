@@ -116,7 +116,7 @@ public class PlayerController : MonoBehaviour {
 		bolt.tag = Tags.PLAYER_BOLT;
 		bolt.GetComponent<Rigidbody2D> ().velocity = new Vector3 (0, boltSpeed, 0);
 
-		scoreKeeper.Score (Tags.PLAYER_BOLT_SCORE_COST);
+		scoreKeeper.RegisterFiring (Tags.PLAYER_BOLT_SCORE_COST);
 	}
 
 	void OnTriggerEnter2D (Collider2D col) {
@@ -154,10 +154,6 @@ public class PlayerController : MonoBehaviour {
 			}
 
 		}
-	}
-
-	void HandleHit() {
-	
 	}
 
 	void Die() {

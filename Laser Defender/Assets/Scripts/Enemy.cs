@@ -54,6 +54,9 @@ public class Enemy : MonoBehaviour {
 			// take the hit
 			health -= bolt.GetDamage();
 
+			// register the hit
+			scoreKeeper.RegisterTargetHit();
+
 			if (health <= 0) {
 				Die ();
 			} else {
@@ -74,6 +77,6 @@ public class Enemy : MonoBehaviour {
 	public void Die() {
 		Destroy(Instantiate (explosion, transform.position, Quaternion.identity), 1.0f);
 		Destroy (gameObject);
-		scoreKeeper.Score(enemyValue);
+		scoreKeeper.RegisterEnemyShipDestroyed(enemyValue);
 	}
 }

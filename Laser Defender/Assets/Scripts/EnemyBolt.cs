@@ -23,7 +23,8 @@ public class EnemyBolt : MonoBehaviour {
 		if (col.gameObject.layer == Tags.PLAYER_FIRE_LAYER && destructable) {
 			// get the scoreKeeper
 			ScoreKeeper scoreKeeper = GameObject.FindObjectOfType<ScoreKeeper> ();
-			scoreKeeper.Score (value);
+			scoreKeeper.RegisterTargetHit ();
+			scoreKeeper.RegisterEnemyTorpedoDestroyed (value);
 
 			// we've been hit by player fire
 			ParticlesManager.CreateParticleEffect (explosion, transform.position, Quaternion.identity);
